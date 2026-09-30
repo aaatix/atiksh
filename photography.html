@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Photography | Atiksh</title>
+<meta name="description" content="Photography by Atiksh.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="index.html">Atiksh</a>
+  <nav aria-label="Main">
+    <a href="projects.html">Projects</a>
+    <a href="photography.html" aria-current="page">Photography</a>
+    <a href="books-movies.html">Books &amp; Movies</a>
+    <a href="index.html#resume">Resume</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="pagehead">
+    <h1>Photography</h1>
+    <!-- Replace with a line about what you shoot -->
+    <p>Photos I've taken.</p>
+  </div>
+
+  <div class="gallery" id="gallery"></div>
+
+  <footer>Built by Atiksh, Indianapolis.</footer>
+</main>
+
+<dialog class="lightbox" id="lb" aria-label="Photo viewer">
+  <img id="lb-img" alt="">
+  <div class="lb-bar">
+    <button type="button" id="lb-prev">Previous</button>
+    <span id="lb-cap"></span>
+    <span>
+      <button type="button" id="lb-next">Next</button>
+      <button type="button" id="lb-close">Close</button>
+    </span>
+  </div>
+</dialog>
+
+<script>
+/*
+  Add your photos here. Put the files in the photos/ folder.
+  caption is optional. ratio only matters for the empty placeholder.
+*/
+const PHOTOS = [
+  { src: "photos/01.jpg", caption: "", ratio: "4/5" },
+  { src: "photos/02.jpg", caption: "", ratio: "3/2" },
+  { src: "photos/03.jpg", caption: "", ratio: "1/1" },
+  { src: "photos/04.jpg", caption: "", ratio: "3/2" },
+  { src: "photos/05.jpg", caption: "", ratio: "4/5" },
+  { src: "photos/06.jpg", caption: "", ratio: "16/9" },
+  { src: "photos/07.jpg", caption: "", ratio: "2/3" },
+  { src: "photos/08.jpg", caption: "", ratio: "3/2" },
+  { src: "photos/09.jpg", caption: "", ratio: "1/1" },
+];
+
+const gal=document.getElementById('gallery');
+const shown=[]; // photos that actually loaded, in order
+
+PHOTOS.forEach((p,i)=>{
+  const fig=document.createElement('figure');
+  const img=new Image();
+  img.src=p.src; img.alt=p.caption||'Photo '+(i+1); img.loading='lazy';
+  img.addEventListener('error',()=>{
+    fig.classList.add('ph-wrap'); fig.removeAttribute('tabindex');
+    const ph=document.createElement('div');
+    ph.className='ph'; ph.style.aspectRatio=p.ratio||'3/2'; ph.dataset.hint=p.src;
+    img.replaceWith(ph);
+    const k=shown.indexOf(p); if(k>-1)shown.splice(k,1);
+  });
+  fig.tabIndex=0;
+  fig.appendChild(img);
+  if(p.caption){const c=document.createElement('figcaption');c.textContent=p.caption;fig.appendChild(c);}
+  shown.push(p);
+  const open=()=>{if(!fig.classList.contains('ph-wrap'))openAt(shown.indexOf(p));};
+  fig.addEventListener('click',open);
+  fig.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();open();}});
+  gal.appendChild(fig);
+});
+
+const lb=document.getElementById('lb'), lbImg=document.getElementById('lb-img'), lbCap=document.getElementById('lb-cap');
+let cur=0;
+function show(){const p=shown[cur];lbImg.src=p.src;lbImg.alt=p.caption||'';lbCap.textContent=p.caption||(cur+1)+' of '+shown.length;}
+function openAt(i){if(i<0)return;cur=i;show();lb.showModal();}
+const move=d=>{cur=(cur+d+shown.length)%shown.length;show();};
+document.getElementById('lb-prev').onclick=()=>move(-1);
+document.getElementById('lb-next').onclick=()=>move(1);
+document.getElementById('lb-close').onclick=()=>lb.close();
+lb.addEventListener('click',e=>{if(e.target===lb)lb.close();});
+lb.addEventListener('keydown',e=>{if(e.key==='ArrowLeft')move(-1);if(e.key==='ArrowRight')move(1);});
+</script>
+</body>
+</html>

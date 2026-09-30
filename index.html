@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Atiksh | Mechanical Engineering, Purdue</title>
+<meta name="description" content="Atiksh, mechanical engineering student at Purdue University Indianapolis. Aerodynamics, rockets, cars.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<div class="hero">
+  <canvas id="flow" aria-hidden="true"></canvas>
+  <header class="top over">
+    <nav aria-label="Main">
+      <a href="projects.html">Projects</a>
+      <a href="photography.html">Photography</a>
+    <a href="books-movies.html">Books &amp; Movies</a>
+      <a href="#resume">Resume</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+  <div class="caption">
+    Air flowing past a rocket in ascent, solved live in your browser. Color is local airspeed.
+    <div class="scale"></div>
+    <div class="scale-labels"><span>slower</span><span>faster</span></div>
+  </div>
+  <div class="hero-text">
+    <!-- Add your last name here if you want it on the page -->
+    <h1>Atiksh</h1>
+    <p>Mechanical engineering at Purdue University Indianapolis. Mostly interested in things that go fast or go up.</p>
+  </div>
+</div>
+
+<main class="wrap">
+
+  <section>
+    <p class="lede">First-year mechanical engineering student, originally from Gurgaon. Right now that means CFD on a Pikes Peak race car and learning rockets with the Purdue Space Program.</p>
+  </section>
+
+  <section>
+    <div class="doors">
+      <a class="door" href="projects.html"><strong>Projects</strong><span>Race car aero, rockets, and the things I started.</span></a>
+      <a class="door" href="photography.html"><strong>Photography</strong><span>Photos I've taken.</span></a>
+      <a class="door" href="books-movies.html"><strong>Books &amp; Movies</strong><span>What I'm reading and watching, rated.</span></a>
+    </div>
+  </section>
+
+  <section>
+    <h2>Before Purdue</h2>
+    <ul class="before">
+      <li><strong>F1 in Schools</strong><span>Car design in Fusion 360</span></li>
+      <li><strong>Stirling engine program</strong><span>KIT, Germany</span></li>
+      <li><strong>UAV and drone work</strong><span>IIT Delhi</span></li>
+      <li><strong>World Scholars Cup</strong><span>Debate, Bangkok Global Round</span></li>
+      <li><strong>HCL Jigsaw Olympiad</strong><span>Participant</span></li>
+      <li><strong>IB Youth Ambassador</strong><span>Programme member</span></li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>What I'm into</h2>
+    <p class="big">Aerospace, rockets, CubeSats, autonomous drones, cars, physics, and looking at Saturn whenever the sky cooperates.</p>
+  </section>
+
+  <section id="resume">
+    <h2>Resume</h2>
+    <p class="lede">The one-page version of everything here, plus the stuff that doesn't fit on a website.</p>
+    <!-- Put resume.pdf in the same folder as this file -->
+    <a class="btn" href="resume.pdf" download>Download resume (PDF)</a>
+  </section>
+
+  <section id="contact">
+    <h2>Say hi</h2>
+    <!-- Replace with your real email and links -->
+    <a class="email" href="mailto:you@example.com">you@example.com</a>
+    <div class="links">
+      <a href="https://www.linkedin.com/in/your-handle">LinkedIn</a>
+      <a href="https://github.com/your-handle">GitHub</a>
+    </div>
+  </section>
+
+  <footer>Built by Atiksh, Indianapolis. The airflow up top is real math, the rest is HTML.</footer>
+</main>
+
+<script>
+(function(){
+  // Rocket frame: the air moves down, the rocket holds still.
+  // Air is potential flow past a Rankine half-body (uniform flow + point source), b = 1, U = 1.
+  const cv=document.getElementById('flow'), ctx=cv.getContext('2d');
+  const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const PI=Math.PI, K=1.9; // K stretches the flow axis on screen for a sharper nose
+
+  const vel=(x,y)=>{const r2=x*x+y*y+1e-6;return[1+x/r2,y/r2];};
+  const inside=(x,y)=>{const ay=Math.abs(y);return ay+Math.atan2(ay,x)<PI;};
+
+  let W,H,cx,y0,s,L,dt,mobile,air=[],fire=[],right=[],yb,noseY,botY,nozBot,nozHalf;
+  const SX=y=>cx+y*s, SY=x=>y0+x*s*K;
+  const airCol=['#3D7BFF','#6E7F92','#39C6D6','#F4C542'];
+  const airB=v=>v<0.75?0:v<1.03?1:v<1.12?2:3;
+  const fireCol=['#FFF4DA','#FFC24A','#FF7A2E','#A8301A'];
+  const gauss=()=>{let u=0;for(let i=0;i<4;i++)u+=Math.random();return (u-2)*1.7;};
+
+  function spawnAir(p,init){
+    for(let t=0;t<10;t++){
+      p.y=Math.random()<0.5?gauss()*6:((Math.random()*W)-cx)/s;
+      p.x=init?((Math.random()*H)-y0)/(s*K):(-y0)/(s*K)-Math.random()*1.5;
+      if(!inside(p.x,p.y))return;
+    }
+  }
+  function stepAir(p){
+    const k1=vel(p.x,p.y);
+    const k2=vel(p.x+k1[0]*dt/2,p.y+k1[1]*dt/2);
+    return [p.x+k2[0]*dt,p.y+k2[1]*dt,Math.hypot(k2[0],k2[1])];
+  }
+  function emitFire(n){
+    for(let i=0;i<n;i++){
+      const off=(Math.random()*2-1)*nozHalf*0.85;
+      fire.push({X:cx+off,Y:nozBot,vx:off/nozHalf*1.1+(Math.random()-.5)*1.2,vy:(mobile?5:7)+Math.random()*5,age:0,life:30+Math.random()*50});
+    }
+  }
+  function stepFire(f){f.px=f.X;f.py=f.Y;f.vx+=(Math.random()-.5)*0.5;f.X+=f.vx;f.Y+=f.vy;f.vx*=1.015;f.age++;}
+
+  function resize(){
+    const dpr=Math.min(window.devicePixelRatio||1,2);
+    W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    mobile=W<720;
+    s=mobile?Math.max(5.5,W*0.017):Math.min(12,W*0.0085);
+    cx=mobile?W*0.5:W*0.7;
+    noseY=H*(mobile?0.1:0.12);
+    y0=noseY+s*K;
+    botY=H*(mobile?0.5:0.6);
+    L=(botY-y0)/(s*K);
+    dt=(mobile?3.2:4)/(s*K);
+    // body outline, right side, nose to base
+    right=[];
+    for(let th=PI-0.002;th>0.01;th-=0.004){
+      const r=(PI-th)/Math.sin(th),x=r*Math.cos(th),y=r*Math.sin(th);
+      if(x>L)break; right.push([x,y]);
+    }
+    yb=right[right.length-1][1];
+    nozHalf=yb*s*0.78; nozBot=botY+yb*s*0.95;
+    const n=Math.round(Math.min(1500,W*H/750));
+    air=Array.from({length:n},()=>{const p={};spawnAir(p,true);return p;});
+    fire=[];
+    ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
+    if(reduce)drawStatic();
+  }
+
+  function drawRocket(){
+    const bw=yb*s, finH=(botY-noseY)*0.16, finW=bw*1.05;
+    ctx.lineWidth=1.5;ctx.strokeStyle='#F2F2F2';ctx.fillStyle='#050505';
+    // fins
+    [1,-1].forEach(d=>{
+      ctx.beginPath();
+      ctx.moveTo(cx+d*bw,botY-finH);ctx.lineTo(cx+d*(bw+finW),botY-finH*0.3);
+      ctx.lineTo(cx+d*(bw+finW),botY+finH*0.12);ctx.lineTo(cx+d*bw,botY);
+      ctx.closePath();ctx.fill();ctx.stroke();
+    });
+    // nozzle
+    ctx.beginPath();
+    ctx.moveTo(cx-bw*0.5,botY);ctx.quadraticCurveTo(cx-bw*0.55,nozBot-bw*0.4,cx-nozHalf,nozBot);
+    ctx.lineTo(cx+nozHalf,nozBot);ctx.quadraticCurveTo(cx+bw*0.55,nozBot-bw*0.4,cx+bw*0.5,botY);
+    ctx.closePath();ctx.fillStyle='#161616';ctx.fill();ctx.stroke();
+    // body
+    ctx.beginPath();
+    right.forEach((p,i)=>{const X=SX(p[1]),Y=SY(p[0]);i?ctx.lineTo(X,Y):ctx.moveTo(X,Y);});
+    for(let i=right.length-1;i>=0;i--)ctx.lineTo(SX(-right[i][1]),SY(right[i][0]));
+    ctx.closePath();ctx.fillStyle='#050505';ctx.fill();ctx.stroke();
+    // stage line
+    const sy=noseY+(botY-noseY)*0.42;
+    ctx.globalAlpha=0.45;ctx.beginPath();ctx.moveTo(cx-bw*0.97,sy);ctx.lineTo(cx+bw*0.97,sy);ctx.stroke();ctx.globalAlpha=1;
+  }
+
+  function drawFire(){
+    const paths=fireCol.map(()=>new Path2D());
+    for(const f of fire){const t=f.age/f.life;const b=t<0.08?0:t<0.35?1:t<0.7?2:3;paths[b].moveTo(f.px,f.py);paths[b].lineTo(f.X,f.Y);}
+    ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.5;ctx.lineWidth=mobile?1.4:1.8;ctx.lineCap='round';
+    paths.forEach((p,i)=>{ctx.strokeStyle=fireCol[i];ctx.stroke(p);});
+    ctx.globalCompositeOperation='source-over';ctx.globalAlpha=1;
+  }
+
+  function frame(){
+    ctx.fillStyle='rgba(0,0,0,0.12)';ctx.fillRect(0,0,W,H);
+    const paths=airCol.map(()=>new Path2D());
+    for(const p of air){
+      const X0=SX(p.y),Y0=SY(p.x);
+      const [nx,ny,v]=stepAir(p);
+      if(inside(nx,ny)||SY(nx)>H+5){spawnAir(p,false);continue;}
+      p.x=nx;p.y=ny;
+      const pth=paths[airB(v)];pth.moveTo(X0,Y0);pth.lineTo(SX(ny),SY(nx));
+    }
+    ctx.lineWidth=1.2;ctx.lineCap='round';
+    paths.forEach((p,i)=>{ctx.strokeStyle=airCol[i];ctx.stroke(p);});
+    emitFire(mobile?6:9);
+    fire.forEach(stepFire);
+    fire=fire.filter(f=>f.age<f.life&&f.Y<H+10);
+    drawFire();
+    drawRocket();
+  }
+
+  function drawStatic(){
+    ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);ctx.lineWidth=1.1;
+    const seeds=[];for(let y=-20;y<=20;y+=0.9)seeds.push(y);
+    for(let y=((0-cx)/s);y<((W-cx)/s);y+=4)seeds.push(y);
+    for(const y of seeds){
+      const p={x:(-y0)/(s*K)-1,y};
+      for(let i=0;i<3000;i++){
+        const X0=SX(p.y),Y0=SY(p.x);const [nx,ny,v]=stepAir(p);
+        if(inside(nx,ny)||SY(nx)>H+5)break;
+        p.x=nx;p.y=ny;ctx.strokeStyle=airCol[airB(v)];
+        ctx.beginPath();ctx.moveTo(X0,Y0);ctx.lineTo(SX(ny),SY(nx));ctx.stroke();
+      }
+    }
+    for(let i=0;i<90;i++){emitFire(14);fire.forEach(stepFire);fire=fire.filter(f=>f.age<f.life&&f.Y<H+10);}
+    drawFire();drawRocket();
+  }
+
+  let visible=true;
+  function loop(){if(visible&&!document.hidden)frame();requestAnimationFrame(loop);}
+  let rt;window.addEventListener('resize',()=>{clearTimeout(rt);rt=setTimeout(resize,150);});
+  resize();
+  if(!reduce){new IntersectionObserver(es=>{visible=es[0].isIntersecting;}).observe(cv);loop();}
+})();
+</script>
+</body>
+</html>

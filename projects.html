@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Projects | Atiksh</title>
+<meta name="description" content="Engineering projects by Atiksh: race car aerodynamics, rocketry, and more.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="index.html">Atiksh</a>
+  <nav aria-label="Main">
+    <a href="projects.html" aria-current="page">Projects</a>
+    <a href="photography.html">Photography</a>
+    <a href="books-movies.html">Books &amp; Movies</a>
+    <a href="index.html#resume">Resume</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="pagehead">
+    <h1>Projects</h1>
+    <p>What I'm working on now, what I started, and what came before.</p>
+  </div>
+
+  <!--
+    Images: put files in the images/ folder with the names shown below.
+    Until a file exists, its slot shows the filename it's waiting for.
+  -->
+
+  <section>
+    <h2>Now</h2>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/pikes-peak.jpg"><img src="images/pikes-peak.jpg" alt="CFD render of the Pikes Peak vehicle" loading="lazy"></div>
+      <div>
+        <h3>Aero for a Pikes Peak car</h3>
+        <div class="meta">VIP 17911, Fall 2026</div>
+        <p>Working on the aerodynamics of a Pikes Peak hill-climb vehicle, starting from the existing models. The semester goal is a CFD-tested design that beats the current baseline. Mentored by Charles Jenckes.</p>
+        <p class="tools">SolidWorks, Siemens STAR-CCM+</p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/psp.jpg"><img src="images/psp.jpg" alt="Purdue Space Program rocket work" loading="lazy"></div>
+      <div>
+        <h3>Purdue Space Program</h3>
+        <div class="meta">Member, Fall 2026</div>
+        <p>Joined this fall. Learning rocket design and trying to become useful as fast as possible.</p>
+        <p class="tools">OpenRocket, Siemens NX</p>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2>Started</h2>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/wespot.jpg"><img src="images/wespot.jpg" alt="Wespot" loading="lazy"></div>
+      <div>
+        <h3>Wespot</h3>
+        <div class="meta">Founder</div>
+        <p>India's first student automotive journalism and engineering organization.</p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/greenfusion.jpg"><img src="images/greenfusion.jpg" alt="GreenFusion STEM kits" loading="lazy"></div>
+      <div>
+        <h3>GreenFusion</h3>
+        <div class="meta">Founder</div>
+        <p>Turns e-waste into STEM kits. Recognized by the IB Youth Action Fund.</p>
+      </div>
+    </article>
+  </section>
+
+  <section>
+    <h2>Earlier</h2>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/f1-in-schools.jpg"><img src="images/f1-in-schools.jpg" alt="F1 in Schools car" loading="lazy"></div>
+      <div>
+        <h3>F1 in Schools</h3>
+        <p>Designed the car in Fusion 360.</p>
+        <p class="tools">Fusion 360</p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/stirling.jpg"><img src="images/stirling.jpg" alt="Stirling engine" loading="lazy"></div>
+      <div>
+        <h3>Stirling engine</h3>
+        <div class="meta">KIT, Germany</div>
+        <p>Stirling engine program at the Karlsruhe Institute of Technology.</p>
+      </div>
+    </article>
+
+    <article class="proj">
+      <div class="shot" data-hint="images/uav.jpg"><img src="images/uav.jpg" alt="UAV work" loading="lazy"></div>
+      <div>
+        <h3>UAVs and drones</h3>
+        <div class="meta">IIT Delhi</div>
+        <p>UAV and drone work at IIT Delhi.</p>
+      </div>
+    </article>
+  </section>
+
+  <footer>Built by Atiksh, Indianapolis.</footer>
+</main>
+
+<script>
+document.querySelectorAll('.shot img').forEach(img=>{
+  const mark=()=>{img.parentElement.classList.add('empty');img.remove();};
+  if(img.complete&&img.naturalWidth===0)mark();else img.addEventListener('error',mark);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Books & Movies | Atiksh</title>
+<meta name="description" content="What Atiksh is reading and watching, rated out of 10.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="index.html">Atiksh</a>
+  <nav aria-label="Main">
+    <a href="projects.html">Projects</a>
+    <a href="photography.html">Photography</a>
+    <a href="books-movies.html" aria-current="page">Books &amp; Movies</a>
+    <a href="index.html#resume">Resume</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="wrap">
+  <div class="pagehead">
+    <h1>Books &amp; Movies</h1>
+    <p>What I'm reading and watching, rated out of 10.</p>
+  </div>
+
+  <section id="now-section">
+    <h2>Right now</h2>
+    <div class="now-grid" id="now"></div>
+  </section>
+
+  <section>
+    <div class="log-head">
+      <h2>Finished</h2>
+      <div class="controls">
+        <div class="filters" role="group" aria-label="Show">
+          <button type="button" data-f="all" aria-pressed="true">All</button>
+          <button type="button" data-f="book" aria-pressed="false">Books</button>
+          <button type="button" data-f="movie" aria-pressed="false">Movies</button>
+        </div>
+        <label class="sort">Sort
+          <select id="sort">
+            <option value="recent">Most recent</option>
+            <option value="rating">Highest rated</option>
+          </select>
+        </label>
+      </div>
+    </div>
+    <ol class="log" id="log"></ol>
+    <p class="empty-msg" id="empty" hidden>Nothing here yet.</p>
+  </section>
+
+  <footer>Built by Atiksh, Indianapolis.</footer>
+</main>
+
+<script>
+/*
+  HOW TO ADD SOMETHING
+  Copy one entry and change it. Fields:
+    type:   "book" or "movie"
+    title:  the title
+    by:     author (books) or director (movies)
+    year:   optional, release year
+    status: "reading", "watching", or "done"
+    rating: 0 to 10, halves OK (e.g. 8.5). Only for "done".
+    date:   when you finished, "YYYY-MM" (used for sorting)
+    note:   optional one-liner
+
+  The entries below are EXAMPLES. Replace them with your own.
+*/
+const LOG = [
+  { type: "book",  title: "Project Hail Mary", by: "Andy Weir", status: "reading", note: "Example. Replace with your own." },
+  { type: "movie", title: "Rush", by: "Ron Howard", year: 2013, status: "done", rating: 9, date: "2026-09", note: "Example. Replace with your own." },
+  { type: "movie", title: "Ford v Ferrari", by: "James Mangold", year: 2019, status: "done", rating: 8.5, date: "2026-08", note: "Example. Replace with your own." },
+  { type: "book",  title: "The Martian", by: "Andy Weir", status: "done", rating: 8, date: "2026-07", note: "Example. Replace with your own." },
+  { type: "movie", title: "Apollo 13", by: "Ron Howard", year: 1995, status: "done", rating: 8.5, date: "2026-06", note: "Example. Replace with your own." },
+];
+
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const month=d=>{if(!d)return'';const[y,m]=d.split('-');return new Date(+y,(+m||1)-1).toLocaleString('en-US',{month:'short',year:'numeric'});};
+const kind=t=>t==='book'?'Book':'Movie';
+const byline=e=>[e.by,e.year].filter(Boolean).join(', ');
+
+// Right now
+const now=LOG.filter(e=>e.status==='reading'||e.status==='watching');
+const nowEl=document.getElementById('now');
+if(!now.length)document.getElementById('now-section').hidden=true;
+nowEl.innerHTML=now.map(e=>`
+  <article class="now-item">
+    <div class="meta">${e.status==='reading'?'Reading':'Watching'}</div>
+    <h3>${esc(e.title)}</h3>
+    <div class="meta">${esc(byline(e))}</div>
+    ${e.note?`<p>${esc(e.note)}</p>`:''}
+  </article>`).join('');
+
+// Finished
+let filter='all', sort='recent';
+function render(){
+  let list=LOG.filter(e=>e.status==='done'&&(filter==='all'||e.type===filter));
+  list.sort(sort==='rating'
+    ?(a,b)=>(b.rating??0)-(a.rating??0)||String(b.date).localeCompare(String(a.date))
+    :(a,b)=>String(b.date).localeCompare(String(a.date)));
+  document.getElementById('empty').hidden=list.length>0;
+  document.getElementById('log').innerHTML=list.map(e=>{
+    const r=Math.max(0,Math.min(10,+e.rating||0));
+    const segs=Array.from({length:10},(_,i)=>`<i class="${r>=i+1?'on':r>=i+0.5?'half':''}"></i>`).join('');
+    return `<li class="entry">
+      <div class="score" aria-label="Rated ${r} out of 10"><span>${r}</span><div class="bar" aria-hidden="true">${segs}</div></div>
+      <div class="what">
+        <h3>${esc(e.title)}</h3>
+        <div class="meta">${esc(byline(e))}</div>
+        ${e.note?`<p>${esc(e.note)}</p>`:''}
+      </div>
+      <div class="when">${kind(e.type)}<br>${month(e.date)}</div>
+    </li>`;}).join('');
+}
+document.querySelectorAll('.filters button').forEach(b=>b.addEventListener('click',()=>{
+  filter=b.dataset.f;
+  document.querySelectorAll('.filters button').forEach(x=>x.setAttribute('aria-pressed',x===b));
+  render();
+}));
+document.getElementById('sort').addEventListener('change',e=>{sort=e.target.value;render();});
+render();
+</script>
+</body>
+</html>
