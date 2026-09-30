@@ -129,3 +129,12 @@ dialog.lightbox::backdrop{background:rgba(0,0,0,.95)}
 .sim-next{margin-top:.8rem;background:rgba(0,0,0,.6);border:1px solid #333;color:var(--ink);font:inherit;font-size:.8rem;padding:.4rem .75rem;border-radius:2px;cursor:pointer}
 .sim-next:hover{border-color:var(--hot);color:var(--hot)}
 .hero .caption p{font-size:inherit;line-height:inherit;max-width:none;margin:0;text-shadow:0 0 8px #000,0 0 2px #000}
+
+/* Home tiles: stacked rows so long titles never collide */
+.doors{grid-template-columns:1fr;gap:0}
+.door{display:grid;grid-template-columns:minmax(0,1fr) minmax(12rem,22rem);gap:.5rem 2rem;align-items:baseline;padding:1.75rem 0}
+.door strong{font-size:clamp(1.9rem,5vw,3.6rem);overflow-wrap:anywhere}
+.door span{margin-top:0}
+@media (max-width:720px){.door{grid-template-columns:1fr}.door span{margin-top:.4rem}}
+.caption{background:rgba(0,0,0,.6);padding:.6rem .75rem;border-radius:2px}
+.door strong{font-size:clamp(1.9rem,4.6vw,3.2rem);overflow-wrap:normal}
