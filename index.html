@@ -59,18 +59,8 @@
       <h2>Things I've built.</h2>
       <p>Tap a card to see more.</p>
     </div>
-    <div class="chips reveal" role="group" aria-label="Filter projects">
-      <button class="chip" data-f="all" aria-pressed="true">All</button>
-      <button class="chip" data-f="now" aria-pressed="false">Now</button>
-      <button class="chip" data-f="founder" aria-pressed="false">Founded</button>
-      <button class="chip" data-f="earlier" aria-pressed="false">Before Purdue</button>
-    </div>
-    <div class="rail-wrap reveal">
-      <div class="rail" id="rail"></div>
-    </div>
-    <div class="rail-nav">
-      <button class="arrow" id="prev" aria-label="Previous">‹</button>
-      <button class="arrow" id="next" aria-label="Next">›</button>
+    <div class="grid-wrap">
+      <div class="grid" id="rail"></div>
     </div>
   </section>
 
@@ -132,11 +122,11 @@
       <span class="eyebrow">Contact</span>
       <h2>Let's talk.</h2>
       <!-- Replace with your real email in BOTH places on the next line -->
-      <a class="email" id="email" href="mailto:vtikshverma@gmail.com">vtikshverma@gmail.com</a>
+      <a class="email" id="email" href="mailto:you@example.com">you@example.com</a>
       <div class="ctas">
         <button type="button" class="btn primary" id="copy">Copy email</button>
         <!-- Replace with your real LinkedIn URL -->
-        <a class="btn ghost" href="https://www.linkedin.com/in/atikshverma/" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
       </div>
       <span class="toast" id="toast" aria-live="polite"></span>
     </div>
@@ -155,7 +145,6 @@
 /*
   PROJECTS
   Edit this list to add, remove or reorder projects.
-    group:  "now", "founder" or "earlier" (used by the filter buttons)
     title, cats (small caps line), desc (shown on the card)
     more:   longer text for the pop-up. Leave "" to reuse desc.
     tags:   tools and skills
@@ -163,29 +152,29 @@
     link:   optional URL. Shows a "Learn more" link in the pop-up.
 */
 const PROJECTS = [
-  { group: "now", title: "Pikes Peak Race Car Aero", cats: "Aerodynamics · CFD",
+  { title: "Pikes Peak Race Car Aero", cats: "Aerodynamics · CFD",
     desc: "CFD on a Pikes Peak hill-climb car.",
     more: "Improving the aerodynamics of a Pikes Peak hill-climb car through CFD, building on the existing models. The goal is a design that beats the current baseline.",
     tags: ["STAR-CCM+", "SolidWorks", "CFD"], img: "images/pikes-peak.jpg", link: "" },
-  { group: "now", title: "Purdue Space Program", cats: "Rocketry · Design",
+  { title: "Purdue Space Program", cats: "Rocketry · Design",
     desc: "Designing and simulating rockets.",
     more: "Rocket design and simulation with the Purdue Space Program.",
     tags: ["OpenRocket", "Siemens NX"], img: "images/psp.jpg", link: "" },
-  { group: "founder", title: "Wespot", cats: "Founder · Automotive",
+  { title: "Wespot", cats: "Founder · Automotive",
     desc: "India's first student automotive journalism and engineering org.",
     more: "", tags: ["Leadership", "Writing"], img: "images/wespot.jpg", link: "" },
-  { group: "founder", title: "GreenFusion", cats: "Founder · Sustainability",
+  { title: "GreenFusion", cats: "Founder · Sustainability",
     desc: "E-waste turned into STEM kits.",
     more: "Turned e-waste into STEM kits for students. Recognized by the IB Youth Action Fund.",
     tags: ["Hardware", "Outreach"], img: "images/greenfusion.jpg", link: "" },
-  { group: "earlier", title: "F1 in Schools", cats: "Design · Manufacturing",
+  { title: "F1 in Schools", cats: "Design · Manufacturing",
     desc: "Designed a competition car in Fusion 360.",
     more: "", tags: ["Fusion 360", "CAD"], img: "images/f1-in-schools.jpg", link: "" },
-  { group: "earlier", title: "Stirling Engine", cats: "Thermodynamics · KIT Germany",
+  { title: "Stirling Engine", cats: "Thermodynamics · KIT Germany",
     desc: "Stirling engine program at KIT.",
     more: "Stirling engine program at the Karlsruhe Institute of Technology.",
     tags: ["Thermodynamics", "Build"], img: "images/stirling.jpg", link: "" },
-  { group: "earlier", title: "UAVs and Drones", cats: "Systems · IIT Delhi",
+  { title: "UAVs and Drones", cats: "Systems · IIT Delhi",
     desc: "UAV and drone work at IIT Delhi.",
     more: "", tags: ["UAV", "Integration"], img: "images/uav.jpg", link: "" },
 ];
@@ -202,7 +191,7 @@ function fallback(box){
 // cards
 const rail = $('rail');
 rail.innerHTML = PROJECTS.map((p, i) => `
-  <button class="card" data-i="${i}" data-g="${esc(p.group)}" aria-label="${esc(p.title)}, open details">
+  <button class="card reveal" data-i="${i}" aria-label="${esc(p.title)}, open details">
     <div class="thumb" data-hint="${esc(p.img)}">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ''}</div>
     <div class="card-top">
       <span class="eyebrow">${esc(p.cats)}</span>
@@ -212,23 +201,6 @@ rail.innerHTML = PROJECTS.map((p, i) => `
     <span class="plus" aria-hidden="true">+</span>
   </button>`).join('');
 rail.querySelectorAll('.thumb').forEach(fallback);
-
-// filters
-document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
-  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === c));
-  rail.querySelectorAll('.card').forEach(card => card.hidden = !(c.dataset.f === 'all' || card.dataset.g === c.dataset.f));
-  rail.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(arrows, 400);
-}));
-
-// arrows
-const step = () => (rail.querySelector('.card:not([hidden])')?.offsetWidth || 360) + 20;
-$('prev').onclick = () => rail.scrollBy({ left: -step(), behavior: 'smooth' });
-$('next').onclick = () => rail.scrollBy({ left: step(), behavior: 'smooth' });
-function arrows(){
-  $('prev').disabled = rail.scrollLeft < 8;
-  $('next').disabled = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 8;
-}
-rail.addEventListener('scroll', arrows, { passive: true }); window.addEventListener('resize', arrows); arrows();
 
 // detail sheet
 const sheet = $('sheet');
@@ -261,7 +233,7 @@ const secObs = new IntersectionObserver(es => es.forEach(en => {
 
 // fade sections in as you scroll
 const rev = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); rev.unobserve(en.target); } }), { threshold: 0.12 });
-document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (el.classList.contains('skill') || el.classList.contains('tile') ? (i % 4) * 80 : 0) + 'ms'; rev.observe(el); });
+document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (el.classList.contains('card') ? (i % 3) * 90 : el.classList.contains('skill') || el.classList.contains('tile') ? (i % 4) * 80 : 0) + 'ms'; rev.observe(el); });
 
 // copy email
 $('copy').addEventListener('click', () => {
