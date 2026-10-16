@@ -15,6 +15,7 @@
   const PAL = ['#3D7BFF', '#6E7F92', '#39C6D6', '#F4C542', '#F2603A'];      // airspeed: slow .. fastest
   const TCOL = ['#3D7BFF', '#39C6D6', '#F4C542', '#FF7A2E', '#FFF4DA'];     // temperature: cold .. hottest
   const FIRE = ['#FFF4DA', '#FFC24A', '#FF7A2E', '#A8301A'];
+  const BG = '#07090F', BGA = 'rgba(7,9,15,';
   const INK = '#F2F2F2', MUTE = '#8C8C8C', FILL = '#050505';
   const GRAD_SPEED = 'linear-gradient(90deg,#3D7BFF,#6E7F92,#39C6D6,#F4C542,#F2603A)';
   const GRAD_TEMP = 'linear-gradient(90deg,#3D7BFF,#39C6D6,#F4C542,#FF7A2E,#FFF4DA)';
@@ -22,8 +23,8 @@
   let W = 0, H = 0, mobile = false, F = 0; // F = global frame counter
 
   // ---------- helpers ----------
-  const fade = a => { ctx.fillStyle = 'rgba(0,0,0,' + a + ')'; ctx.fillRect(0, 0, W, H); };
-  const clear = () => { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); };
+  const fade = a => { ctx.fillStyle = BGA + a + ')'; ctx.fillRect(0, 0, W, H); };
+  const clear = () => { ctx.fillStyle = BG; ctx.fillRect(0, 0, W, H); };
   const newPaths = n => Array.from({ length: n }, () => new Path2D());
   const seg = (p, x0, y0, x1, y1) => { p.moveTo(x0, y0); p.lineTo(x1, y1); };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -53,17 +54,18 @@
   }
   // Text readout: first line bright, the rest muted
   function readout(x, y, lines, align){
+    if (mobile) return; // no room on phones; the hero text sits there
     ctx.font = (mobile ? 11 : 12.5) + 'px "Hanken Grotesk", Arial, sans-serif';
     ctx.textAlign = align || 'left'; ctx.textBaseline = 'alphabetic';
     const lh = mobile ? 15 : 17, wmax = Math.max(...lines.map(l => ctx.measureText(l).width));
-    ctx.fillStyle = '#000'; ctx.fillRect(align === 'right' ? x - wmax - 6 : x - 6, y - 15, wmax + 12, lh * lines.length + 8);
+    ctx.fillStyle = BG; ctx.fillRect(align === 'right' ? x - wmax - 6 : x - 6, y - 15, wmax + 12, lh * lines.length + 8);
     lines.forEach((l, i) => { ctx.fillStyle = i === 0 ? INK : MUTE; ctx.fillText(l, x, y + i * lh); });
   }
   // stroke style that fades out toward the left, so ground lines don't run through the name
   function leftFade(col){
     if (mobile) return col;
     const g = ctx.createLinearGradient(W * 0.3, 0, W * 0.48, 0);
-    g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, col); return g;
+    g.addColorStop(0, BGA + '0)'); g.addColorStop(1, col); return g;
   }
   function makeStars(n, maxY){
     return Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * maxY, a: 0.12 + Math.random() * 0.5, r: Math.random() < 0.1 ? 1.5 : 0.9 }));
@@ -149,7 +151,7 @@
     }
 
     function drawGround(){
-      ctx.fillStyle = '#000'; ctx.fillRect(0, GY, W, H - GY);
+      ctx.fillStyle = BG; ctx.fillRect(0, GY, W, H - GY);
       ctx.strokeStyle = '#3A3A3A'; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(Math.max(0, bx - bw * 8), GY); ctx.lineTo(W, GY); ctx.stroke();
       // launch mount under the tower
@@ -277,7 +279,7 @@
       drawArm(true);
       drawFire(fire, mobile ? 1.8 : 2.4, 2.5, 0.85); drawDust();
       drawBooster(); drawCarriage(); drawArm(false); drawTelemetry();
-      if (phase === 'out'){ ctx.fillStyle = 'rgba(0,0,0,' + Math.min(1, tHold) + ')'; ctx.fillRect(0, 0, W, H); }
+      if (phase === 'out'){ ctx.fillStyle = BGA + Math.min(1, tHold) + ')'; ctx.fillRect(0, 0, W, H); }
     }
 
     return {
@@ -349,7 +351,7 @@
     const P = (x, y) => [X0 + x * L, GY - y * L];
 
     function drawRoad(){
-      ctx.fillStyle = '#000'; ctx.fillRect(0, GY, W, H - GY);
+      ctx.fillStyle = BG; ctx.fillRect(0, GY, W, H - GY);
       ctx.strokeStyle = leftFade('#3A3A3A'); ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(0, GY); ctx.lineTo(W, GY); ctx.stroke();
       const per = 0.24 * L, off = dash % per, y = GY + Math.max(10, 0.05 * L);
@@ -587,7 +589,7 @@
         strokePaths(paths, PAL, 1.2);
         tickFire(); drawFire(fire, mobile ? 1.4 : 1.8); drawDiamonds(); drawRocket();
         drawTelemetry();
-        if (out > 0){ ctx.fillStyle = 'rgba(0,0,0,' + Math.min(1, out) + ')'; ctx.fillRect(0, 0, W, H); }
+        if (out > 0){ ctx.fillStyle = BGA + Math.min(1, out) + ')'; ctx.fillRect(0, 0, W, H); }
       },
       still(){
         clear();
@@ -1347,7 +1349,7 @@
       // road
       ctx.beginPath(); ctx.moveTo(0, H);
       for (let X = 0; X <= W + 3; X += 3) ctx.lineTo(X, roadY(sPos + (X - xw) / S));
-      ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = '#000'; ctx.fill();
+      ctx.lineTo(W, H); ctx.closePath(); ctx.fillStyle = BG; ctx.fill();
       ctx.beginPath();
       for (let X = 0; X <= W + 3; X += 3){ const Y = roadY(sPos + (X - xw) / S); X ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }
       ctx.strokeStyle = leftFade('#6E6E6E'); ctx.lineWidth = 1.5; ctx.stroke();
