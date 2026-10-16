@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Project | Atiksh Verma</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="project-page">
+
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="brand" href="index.html">Atiksh Verma</a>
+    <ul class="links" id="links">
+      <li><a href="index.html#projects" class="on">Projects</a></li>
+      <li><a href="index.html#about">About</a></li>
+      <li><a href="index.html#skills">Skills</a></li>
+      <li><a href="index.html#contact">Contact</a></li>
+      <li class="m-only"><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+    </ul>
+    <a class="nav-cta" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="menu-btn" id="menu" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
+</nav>
+
+<main id="page">
+  <article class="pj">
+    <div class="pj-head wrap">
+      <a class="back" href="index.html#projects">‹ All projects</a>
+      <span class="eyebrow" id="cat"></span>
+      <h1 id="title"></h1>
+      <p class="pj-where" id="where"></p>
+      <p class="pj-lede" id="overview"></p>
+      <div class="ctas" id="ext"></div>
+    </div>
+
+    <div class="pj-cover" id="cover"></div>
+
+    <div class="wrap pj-body">
+      <section class="pj-sec" id="did-sec">
+        <span class="eyebrow">What I did</span>
+        <ul class="pj-list" id="did"></ul>
+      </section>
+      <section class="pj-sec">
+        <span class="eyebrow">Tools and skills</span>
+        <div class="tags" id="tags"></div>
+      </section>
+      <section class="pj-sec" id="gal-sec" hidden>
+        <span class="eyebrow">Gallery</span>
+        <div class="pj-gallery" id="gallery"></div>
+      </section>
+    </div>
+
+    <nav class="pj-nav wrap" aria-label="More projects">
+      <a id="prev"><span class="eyebrow">Previous</span><strong></strong></a>
+      <a id="next"><span class="eyebrow">Next</span><strong></strong></a>
+    </nav>
+  </article>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>© Atiksh Verma</span>
+    <a href="index.html">Home</a>
+  </div>
+</footer>
+
+<script src="projects.js"></script>
+<script>
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const all = window.PROJECTS;
+const slug = new URLSearchParams(location.search).get('p');
+const i = all.findIndex(p => p.slug === slug);
+
+if (i < 0){
+  $('page').innerHTML = `<div class="wrap pj-missing"><span class="eyebrow">Not found</span><h1>That project doesn't exist.</h1><p><a class="btn primary" href="index.html#projects">See all projects</a></p></div>`;
+} else {
+  const p = all[i];
+  document.title = p.title + ' | Atiksh Verma';
+  $('cat').textContent = p.cats;
+  $('title').textContent = p.title;
+  $('where').textContent = p.where || '';
+  $('overview').textContent = p.overview || p.desc;
+  if (p.link) $('ext').innerHTML = `<a class="btn primary" href="${esc(p.link)}" target="_blank" rel="noopener">Visit site</a>`;
+
+  $('cover').innerHTML = p.img ? `<img src="${esc(p.img)}" alt="${esc(p.title)}">` : '';
+  $('cover').dataset.hint = p.img || '';
+  const img = $('cover').querySelector('img');
+  const empty = () => { $('cover').classList.add('empty'); img && img.remove(); };
+  if (!img) empty(); else if (img.complete && img.naturalWidth === 0) empty(); else img.addEventListener('error', empty);
+
+  if (p.did && p.did.length) $('did').innerHTML = p.did.map(d => `<li>${esc(d)}</li>`).join('');
+  else $('did-sec').hidden = true;
+  $('tags').innerHTML = (p.tags || []).map(t => `<span>${esc(t)}</span>`).join('');
+
+  const gal = (p.gallery || []).filter(g => g && g.src);
+  if (gal.length){
+    $('gal-sec').hidden = false;
+    $('gallery').innerHTML = gal.map(g => `<figure><img src="${esc(g.src)}" alt="${esc(g.caption || p.title)}" loading="lazy">${g.caption ? `<figcaption>${esc(g.caption)}</figcaption>` : ''}</figure>`).join('');
+  }
+
+  const prev = all[(i - 1 + all.length) % all.length], next = all[(i + 1) % all.length];
+  $('prev').href = 'project.html?p=' + encodeURIComponent(prev.slug); $('prev').querySelector('strong').textContent = '‹ ' + prev.title;
+  $('next').href = 'project.html?p=' + encodeURIComponent(next.slug); $('next').querySelector('strong').textContent = next.title + ' ›';
+}
+
+const nav = $('nav');
+$('menu').onclick = () => { const o = nav.classList.toggle('open'); $('menu').setAttribute('aria-expanded', o); };
+</script>
+</body>
+</html>

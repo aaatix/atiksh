@@ -57,7 +57,7 @@
     <div class="wrap section-head reveal">
       <span class="eyebrow">Projects</span>
       <h2>Things I've built.</h2>
-      <p>Tap a card to see more.</p>
+      <p>Open a card for the full story, or tap + for a quick look.</p>
     </div>
     <div class="grid-wrap">
       <div class="grid" id="rail"></div>
@@ -110,9 +110,9 @@
       </div>
       <div class="skills">
         <div class="skill reveal"><span class="eyebrow">CAD</span><p>SolidWorks, Siemens NX, Fusion 360</p></div>
-        <div class="skill reveal"><span class="eyebrow">Simulation</span><p>Siemens STAR-CCM+, OpenRocket</p></div>
-        <div class="skill reveal"><span class="eyebrow">Programming</span><p>Python, HTML, CSS</p></div>
-        <div class="skill reveal"><span class="eyebrow">Other</span><p>Technical writing, project leadership</p></div>
+        <div class="skill reveal"><span class="eyebrow">Simulation</span><p>STAR-CCM+ (CFD), OpenRocket</p></div>
+        <div class="skill reveal"><span class="eyebrow">Technical</span><p>Python, MATLAB, IoT systems, PCB design</p></div>
+        <div class="skill reveal"><span class="eyebrow">Languages</span><p>English, Hindi, Spanish</p></div>
       </div>
     </div>
   </section>
@@ -121,12 +121,10 @@
     <div class="wrap contact reveal">
       <span class="eyebrow">Contact</span>
       <h2>Let's talk.</h2>
-      <!-- Replace with your real email in BOTH places on the next line -->
-      <a class="email" id="email" href="mailto:you@example.com">you@example.com</a>
+      <a class="email" id="email" href="mailto:atiksh.verma@gmail.com">atiksh.verma@gmail.com</a>
       <div class="ctas">
         <button type="button" class="btn primary" id="copy">Copy email</button>
-        <!-- Replace with your real LinkedIn URL -->
-        <a class="btn ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn ghost" href="https://www.linkedin.com/in/atikshverma/" target="_blank" rel="noopener">LinkedIn</a>
       </div>
       <span class="toast" id="toast" aria-live="polite"></span>
     </div>
@@ -141,44 +139,9 @@
   </div>
 </footer>
 
+<script src="projects.js"></script>
 <script>
-/*
-  PROJECTS
-  Edit this list to add, remove or reorder projects.
-    title, cats (small caps line), desc (shown on the card)
-    more:   longer text for the pop-up. Leave "" to reuse desc.
-    tags:   tools and skills
-    img:    put the file in the images/ folder, e.g. "images/pikes-peak.jpg"
-    link:   optional URL. Shows a "Learn more" link in the pop-up.
-*/
-const PROJECTS = [
-  { title: "Pikes Peak Race Car Aero", cats: "Aerodynamics · CFD",
-    desc: "CFD on a Pikes Peak hill-climb car.",
-    more: "Improving the aerodynamics of a Pikes Peak hill-climb car through CFD, building on the existing models. The goal is a design that beats the current baseline.",
-    tags: ["STAR-CCM+", "SolidWorks", "CFD"], img: "images/pikes-peak.jpg", link: "" },
-  { title: "Purdue Space Program", cats: "Rocketry · Design",
-    desc: "Designing and simulating rockets.",
-    more: "Rocket design and simulation with the Purdue Space Program.",
-    tags: ["OpenRocket", "Siemens NX"], img: "images/psp.jpg", link: "" },
-  { title: "Wespot", cats: "Founder · Automotive",
-    desc: "India's first student automotive journalism and engineering org.",
-    more: "", tags: ["Leadership", "Writing"], img: "images/wespot.jpg", link: "" },
-  { title: "GreenFusion", cats: "Founder · Sustainability",
-    desc: "E-waste turned into STEM kits.",
-    more: "Turned e-waste into STEM kits for students. Recognized by the IB Youth Action Fund.",
-    tags: ["Hardware", "Outreach"], img: "images/greenfusion.jpg", link: "" },
-  { title: "F1 in Schools", cats: "Design · Manufacturing",
-    desc: "Designed a competition car in Fusion 360.",
-    more: "", tags: ["Fusion 360", "CAD"], img: "images/f1-in-schools.jpg", link: "" },
-  { title: "Stirling Engine", cats: "Thermodynamics · KIT Germany",
-    desc: "Stirling engine program at KIT.",
-    more: "Stirling engine program at the Karlsruhe Institute of Technology.",
-    tags: ["Thermodynamics", "Build"], img: "images/stirling.jpg", link: "" },
-  { title: "UAVs and Drones", cats: "Systems · IIT Delhi",
-    desc: "UAV and drone work at IIT Delhi.",
-    more: "", tags: ["UAV", "Integration"], img: "images/uav.jpg", link: "" },
-];
-
+const PROJECTS = window.PROJECTS;
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 function fallback(box){
@@ -188,30 +151,32 @@ function fallback(box){
   if (img.complete && img.naturalWidth === 0) empty(); else img.addEventListener('error', empty);
 }
 
-// cards
+// cards: click the card to open its page, click + for a quick preview
 const rail = $('rail');
 rail.innerHTML = PROJECTS.map((p, i) => `
-  <button class="card reveal" data-i="${i}" aria-label="${esc(p.title)}, open details">
+  <article class="card reveal">
     <div class="thumb" data-hint="${esc(p.img)}">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ''}</div>
     <div class="card-top">
       <span class="eyebrow">${esc(p.cats)}</span>
       <h3>${esc(p.title)}</h3>
       <p>${esc(p.desc)}</p>
     </div>
-    <span class="plus" aria-hidden="true">+</span>
-  </button>`).join('');
+    <a class="cover" href="project.html?p=${encodeURIComponent(p.slug)}" aria-label="${esc(p.title)}, open project"></a>
+    <button class="plus" data-i="${i}" aria-label="Preview ${esc(p.title)}">+</button>
+  </article>`).join('');
 rail.querySelectorAll('.thumb').forEach(fallback);
 
-// detail sheet
+// preview sheet
 const sheet = $('sheet');
 rail.addEventListener('click', e => {
-  const card = e.target.closest('.card'); if (!card) return;
-  const p = PROJECTS[card.dataset.i];
+  const btn = e.target.closest('.plus'); if (!btn) return;
+  const p = PROJECTS[btn.dataset.i];
   $('sheet-cat').textContent = p.cats;
   $('sheet-title').textContent = p.title;
-  $('sheet-text').textContent = p.more || p.desc;
+  $('sheet-text').textContent = p.overview || p.desc;
   $('sheet-tags').innerHTML = p.tags.map(t => `<span>${esc(t)}</span>`).join('');
-  $('sheet-link').innerHTML = p.link ? `<a class="btn primary" href="${esc(p.link)}" target="_blank" rel="noopener">Learn more</a>` : '';
+  $('sheet-link').innerHTML = `<a class="btn primary" href="project.html?p=${encodeURIComponent(p.slug)}">View full project</a>`
+    + (p.link ? `<a class="link" href="${esc(p.link)}" target="_blank" rel="noopener">Visit site</a>` : '');
   $('sheet-img').innerHTML = p.img ? `<img src="${esc(p.img)}" alt="${esc(p.title)}">` : '';
   $('sheet-img').className = 'sheet-img'; fallback($('sheet-img'));
   sheet.showModal();
