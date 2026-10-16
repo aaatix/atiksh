@@ -55,7 +55,7 @@
   // Text readout: first line bright, the rest muted
   function readout(x, y, lines, align){
     if (mobile) return; // no room on phones; the hero text sits there
-    ctx.font = (mobile ? 11 : 12.5) + 'px "Barlow", Arial, sans-serif';
+    ctx.font = (mobile ? 11 : 12.5) + 'px -apple-system, "Inter", Arial, sans-serif';
     ctx.textAlign = align || 'left'; ctx.textBaseline = 'alphabetic';
     const lh = mobile ? 15 : 17, wmax = Math.max(...lines.map(l => ctx.measureText(l).width));
     ctx.fillStyle = BG; ctx.fillRect(align === 'right' ? x - wmax - 6 : x - 6, y - 15, wmax + 12, lh * lines.length + 8);
@@ -271,7 +271,7 @@
         hist.forEach((hv, i) => { const X = px0 + (i / n) * pw, Y = py0 + ph - (hv / HC) * ph; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
         ctx.strokeStyle = '#39C6D6'; ctx.lineWidth = 1.4; ctx.stroke();
       }
-      ctx.font = '11px "Barlow", Arial, sans-serif'; ctx.fillStyle = MUTE; ctx.textAlign = 'right';
+      ctx.font = '11px -apple-system, "Inter", Arial, sans-serif'; ctx.fillStyle = MUTE; ctx.textAlign = 'right';
       ctx.fillText('Altitude over time', x, py0 + ph + 14);
     }
     function draw(){
@@ -814,7 +814,7 @@
         // apsis markers
         if (e > 0.02){
           const ux = ex / e, uy = ey / e, rp = a * (1 - e), ra = a * (1 + e);
-          ctx.setLineDash([]); ctx.fillStyle = MUTE; ctx.font = '11px "Barlow", Arial, sans-serif'; ctx.textAlign = 'center';
+          ctx.setLineDash([]); ctx.fillStyle = MUTE; ctx.font = '11px -apple-system, "Inter", Arial, sans-serif'; ctx.textAlign = 'center';
           [[rp, 'Periapsis'], [-ra, 'Apoapsis']].forEach(([d, t]) => {
             const px = cx + ux * d, py = cy + uy * d;
             ctx.beginPath(); ctx.arc(px, py, 2.5, 0, TAU); ctx.fill(); ctx.fillText(t, px, py - 8);
@@ -966,7 +966,7 @@
     }
     function drawLabels(){
       if (mobile) return;
-      ctx.font = '11.5px "Barlow", Arial, sans-serif'; ctx.fillStyle = MUTE; ctx.textAlign = 'center';
+      ctx.font = '11.5px -apple-system, "Inter", Arial, sans-serif'; ctx.fillStyle = MUTE; ctx.textAlign = 'center';
       const y = cy + Rn * 1.3;
       [['Fan', .11], ['Compressor', .36], ['Combustor', .555], ['Turbine', .7], ['Nozzle', .95]].forEach(([t, x]) => {
         const X = X0 + x * Le; ctx.fillText(t, X, y + 14);
@@ -1189,7 +1189,7 @@
       strokePaths(paths, TCOL, 1.6);
       const last = pv[pv.length - 1];
       if (last){ ctx.fillStyle = INK; ctx.beginPath(); ctx.arc(X(last[0]), Y(last[1]), 3, 0, TAU); ctx.fill(); }
-      ctx.font = '11px "Barlow", Arial, sans-serif'; ctx.fillStyle = MUTE;
+      ctx.font = '11px -apple-system, "Inter", Arial, sans-serif'; ctx.fillStyle = MUTE;
       ctx.textAlign = 'left'; ctx.fillText('Pressure', x + 4, y + 10);
       ctx.textAlign = 'right'; ctx.fillText('Volume', x + w, y + h + 14);
       ctx.fillStyle = INK; ctx.textAlign = 'left'; ctx.fillText('Pressure vs volume', x, y - 10);
@@ -1392,7 +1392,7 @@
         hist.forEach((hh, i) => { const X = x + w - (hist.length - i), Y = mid - clamp(hh[c], -0.12, 0.12) * k; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); });
         ctx.strokeStyle = cols[c]; ctx.lineWidth = c === 2 ? 2 : 1.3; ctx.stroke();
       }
-      ctx.font = '11.5px "Barlow", Arial, sans-serif'; ctx.textAlign = 'left';
+      ctx.font = '11.5px -apple-system, "Inter", Arial, sans-serif'; ctx.textAlign = 'left';
       let lx = x + 8; names.forEach((n, i) => { ctx.fillStyle = cols[i]; ctx.fillText(n, lx, y + 16); lx += ctx.measureText(n).width + 14; });
       ctx.fillStyle = MUTE; ctx.textAlign = 'right'; ctx.fillText('Height over the last few seconds', x + w, y + h + 15);
       const lines = ['Quarter-car suspension', 'Speed ' + Math.round(V * 3.6) + ' km/h', 'Body travel ' + (zs * 100).toFixed(1) + ' cm',

@@ -8,21 +8,25 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-<nav class="nav" aria-label="Main">
-  <a class="brand" href="#top">Atiksh Verma</a>
-  <ul>
-    <li><a href="#projects">Projects</a></li>
-    <li><a href="#about">About</a></li>
-    <li><a href="#skills">Skills</a></li>
-    <li><a href="#contact">Contact</a></li>
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="brand" href="#top">Atiksh Verma</a>
+    <ul class="links" id="links">
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li class="m-only"><a href="resume.pdf" target="_blank" rel="noopener">Resume</a></li>
+    </ul>
     <!-- Put resume.pdf in the same folder as this file -->
-    <li class="keep"><a class="pill" href="resume.pdf" target="_blank" rel="noopener">Resume</a></li>
-  </ul>
+    <a class="nav-cta" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+    <button class="menu-btn" id="menu" aria-label="Menu" aria-expanded="false"><span></span><span></span></button>
+  </div>
 </nav>
 
 <header class="hero" id="top">
@@ -36,133 +40,233 @@
     <button type="button" class="sim-next" id="sim-next">Next simulation</button>
   </div>
   <div class="hero-text">
-    <span class="eyebrow">Mechanical Engineering · Purdue University Indianapolis</span>
-    <h1>Building things that go<br>fast or go up.</h1>
+    <span class="eyebrow">Mechanical Engineering · Purdue</span>
+    <h1>Building things that go fast or go up.</h1>
     <p>I'm Atiksh. I work on race car aerodynamics and rockets, and I like taking a design from CAD to something that actually works.</p>
-    <div class="btns">
-      <a class="btn primary" href="#projects">View projects</a>
-      <a class="btn ghost" href="resume.pdf" target="_blank" rel="noopener">Download resume</a>
+    <div class="ctas">
+      <a class="btn primary" href="#projects">See my work</a>
+      <a class="link" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
     </div>
   </div>
+  <a class="scroll-hint" href="#projects" aria-label="Scroll to projects"></a>
 </header>
 
-<main class="wrap">
+<main>
 
   <section id="projects">
-    <div class="head">
-      <h2>Projects</h2>
-      <p>What I'm working on now and what I've built before.</p>
+    <div class="wrap section-head reveal">
+      <span class="eyebrow">Projects</span>
+      <h2>Things I've built.</h2>
+      <p>Tap a card to see more.</p>
     </div>
-    <div class="cards" id="cards"></div>
+    <div class="chips reveal" role="group" aria-label="Filter projects">
+      <button class="chip" data-f="all" aria-pressed="true">All</button>
+      <button class="chip" data-f="now" aria-pressed="false">Now</button>
+      <button class="chip" data-f="founder" aria-pressed="false">Founded</button>
+      <button class="chip" data-f="earlier" aria-pressed="false">Before Purdue</button>
+    </div>
+    <div class="rail-wrap reveal">
+      <div class="rail" id="rail"></div>
+    </div>
+    <div class="rail-nav">
+      <button class="arrow" id="prev" aria-label="Previous">‹</button>
+      <button class="arrow" id="next" aria-label="Next">›</button>
+    </div>
   </section>
 
+  <dialog class="sheet" id="sheet" aria-labelledby="sheet-title">
+    <button class="close" id="close" aria-label="Close">×</button>
+    <div class="sheet-img" id="sheet-img"></div>
+    <div class="sheet-body">
+      <span class="eyebrow" id="sheet-cat"></span>
+      <h3 id="sheet-title"></h3>
+      <p id="sheet-text"></p>
+      <div class="tags" id="sheet-tags"></div>
+      <div class="ctas" id="sheet-link"></div>
+    </div>
+  </dialog>
+
   <section id="about">
-    <div class="head"><h2>About</h2></div>
-    <div class="about">
-      <p>First-year mechanical engineering student at Purdue, originally from Gurgaon. I started Wespot and GreenFusion before university, and now spend most of my time on CFD for a Pikes Peak car and rockets with the Purdue Space Program.</p>
-      <div>
-        <h3>What I'm into</h3>
-        <ul>
-          <li>Aerodynamics and CFD</li>
-          <li>Rockets, CubeSats and drones</li>
-          <li>Cars, physics, and stargazing</li>
-        </ul>
-      </div>
-      <div>
-        <h3>What I'm looking for</h3>
-        <ul>
-          <li>A summer 2027 internship in aerospace</li>
-          <li>Hands-on design, build and test work</li>
-          <li>Teams I can learn a lot from</li>
-        </ul>
+    <div class="wrap">
+      <p class="statement reveal">First-year mechanical engineering student at Purdue, originally from Gurgaon. <span class="dim">I started Wespot and GreenFusion before university. Now it's CFD for a Pikes Peak car and rockets with the Purdue Space Program.</span></p>
+      <div class="duo">
+        <div class="tile reveal">
+          <span class="eyebrow">Interests</span>
+          <h3>What I'm into</h3>
+          <ul>
+            <li>Aerodynamics and CFD</li>
+            <li>Rockets, CubeSats and drones</li>
+            <li>Cars, physics and stargazing</li>
+          </ul>
+        </div>
+        <div class="tile reveal">
+          <span class="eyebrow">Next</span>
+          <h3>What I'm looking for</h3>
+          <ul>
+            <li>A summer 2027 internship in aerospace</li>
+            <li>Hands-on design, build and test work</li>
+            <li>Teams I can learn a lot from</li>
+          </ul>
+        </div>
       </div>
     </div>
   </section>
 
   <section id="skills">
-    <div class="head"><h2>Skills</h2></div>
-    <div class="skills">
-      <div class="skill"><h3>CAD</h3><p>SolidWorks, Siemens NX, Fusion 360</p></div>
-      <div class="skill"><h3>Simulation</h3><p>Siemens STAR-CCM+, OpenRocket</p></div>
-      <div class="skill"><h3>Programming</h3><p>Python, HTML, CSS</p></div>
-      <div class="skill"><h3>Other</h3><p>Technical writing, project leadership</p></div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="contact">
-      <h2>Contact</h2>
-      <p class="note">Best way to reach me is email.</p>
-      <!-- Replace with your real email in BOTH places on the next line -->
-      <a class="email" id="email" href="mailto:you@example.com">you@example.com</a>
-      <div class="btns">
-        <button type="button" class="btn primary" id="copy">Copy email</button>
-        <!-- Replace with your real LinkedIn URL -->
-        <a class="btn ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+    <div class="wrap">
+      <div class="section-head reveal">
+        <span class="eyebrow">Skills</span>
+        <h2>Tools I use.</h2>
+      </div>
+      <div class="skills">
+        <div class="skill reveal"><span class="eyebrow">CAD</span><p>SolidWorks, Siemens NX, Fusion 360</p></div>
+        <div class="skill reveal"><span class="eyebrow">Simulation</span><p>Siemens STAR-CCM+, OpenRocket</p></div>
+        <div class="skill reveal"><span class="eyebrow">Programming</span><p>Python, HTML, CSS</p></div>
+        <div class="skill reveal"><span class="eyebrow">Other</span><p>Technical writing, project leadership</p></div>
       </div>
     </div>
   </section>
 
-  <footer>
-    <span>© Atiksh Verma</span>
-    <span><a href="#top">Back to top ↑</a></span>
-  </footer>
+  <section id="contact">
+    <div class="wrap contact reveal">
+      <span class="eyebrow">Contact</span>
+      <h2>Let's talk.</h2>
+      <!-- Replace with your real email in BOTH places on the next line -->
+      <a class="email" id="email" href="mailto:you@example.com">you@example.com</a>
+      <div class="ctas">
+        <button type="button" class="btn primary" id="copy">Copy email</button>
+        <!-- Replace with your real LinkedIn URL -->
+        <a class="btn ghost" href="https://www.linkedin.com/in/your-handle" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+      <span class="toast" id="toast" aria-live="polite"></span>
+    </div>
+  </section>
+
 </main>
+
+<footer>
+  <div class="wrap">
+    <span>© Atiksh Verma</span>
+    <a href="#top">Back to top</a>
+  </div>
+</footer>
 
 <script>
 /*
   PROJECTS
   Edit this list to add, remove or reorder projects.
-    title, cats (small caps line), desc, tags
-    img:  put the file in the images/ folder, e.g. "images/pikes-peak.jpg"
-    link: optional. A URL for "Open project". Leave "" to hide the link.
+    group:  "now", "founder" or "earlier" (used by the filter buttons)
+    title, cats (small caps line), desc (shown on the card)
+    more:   longer text for the pop-up. Leave "" to reuse desc.
+    tags:   tools and skills
+    img:    put the file in the images/ folder, e.g. "images/pikes-peak.jpg"
+    link:   optional URL. Shows a "Learn more" link in the pop-up.
 */
 const PROJECTS = [
-  { title: "Pikes Peak Race Car Aero", cats: "Aerodynamics · CFD",
-    desc: "Improving the aerodynamics of a Pikes Peak hill-climb car through CFD, aiming to beat the current baseline design.",
+  { group: "now", title: "Pikes Peak Race Car Aero", cats: "Aerodynamics · CFD",
+    desc: "CFD on a Pikes Peak hill-climb car.",
+    more: "Improving the aerodynamics of a Pikes Peak hill-climb car through CFD, building on the existing models. The goal is a design that beats the current baseline.",
     tags: ["STAR-CCM+", "SolidWorks", "CFD"], img: "images/pikes-peak.jpg", link: "" },
-  { title: "Purdue Space Program", cats: "Rocketry · Design",
-    desc: "Rocket design and simulation with the Purdue Space Program.",
+  { group: "now", title: "Purdue Space Program", cats: "Rocketry · Design",
+    desc: "Designing and simulating rockets.",
+    more: "Rocket design and simulation with the Purdue Space Program.",
     tags: ["OpenRocket", "Siemens NX"], img: "images/psp.jpg", link: "" },
-  { title: "Wespot", cats: "Founder · Automotive",
-    desc: "Started India's first student automotive journalism and engineering organization.",
-    tags: ["Leadership", "Writing"], img: "images/wespot.jpg", link: "" },
-  { title: "GreenFusion", cats: "Founder · Sustainability",
-    desc: "Turned e-waste into STEM kits for students. Recognized by the IB Youth Action Fund.",
+  { group: "founder", title: "Wespot", cats: "Founder · Automotive",
+    desc: "India's first student automotive journalism and engineering org.",
+    more: "", tags: ["Leadership", "Writing"], img: "images/wespot.jpg", link: "" },
+  { group: "founder", title: "GreenFusion", cats: "Founder · Sustainability",
+    desc: "E-waste turned into STEM kits.",
+    more: "Turned e-waste into STEM kits for students. Recognized by the IB Youth Action Fund.",
     tags: ["Hardware", "Outreach"], img: "images/greenfusion.jpg", link: "" },
-  { title: "F1 in Schools", cats: "Design · Manufacturing",
+  { group: "earlier", title: "F1 in Schools", cats: "Design · Manufacturing",
     desc: "Designed a competition car in Fusion 360.",
-    tags: ["Fusion 360", "CAD"], img: "images/f1-in-schools.jpg", link: "" },
-  { title: "Stirling Engine", cats: "Thermodynamics · KIT Germany",
-    desc: "Stirling engine program at the Karlsruhe Institute of Technology.",
+    more: "", tags: ["Fusion 360", "CAD"], img: "images/f1-in-schools.jpg", link: "" },
+  { group: "earlier", title: "Stirling Engine", cats: "Thermodynamics · KIT Germany",
+    desc: "Stirling engine program at KIT.",
+    more: "Stirling engine program at the Karlsruhe Institute of Technology.",
     tags: ["Thermodynamics", "Build"], img: "images/stirling.jpg", link: "" },
-  { title: "UAV and Drones", cats: "Systems · IIT Delhi",
+  { group: "earlier", title: "UAVs and Drones", cats: "Systems · IIT Delhi",
     desc: "UAV and drone work at IIT Delhi.",
-    tags: ["UAV", "Integration"], img: "images/uav.jpg", link: "" },
+    more: "", tags: ["UAV", "Integration"], img: "images/uav.jpg", link: "" },
 ];
 
+const $ = id => document.getElementById(id);
 const esc = s => String(s ?? '').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-document.getElementById('cards').innerHTML = PROJECTS.map(p => `
-  <article class="card">
-    <div class="thumb" data-hint="${esc(p.img)}">${p.img ? `<img src="${esc(p.img)}" alt="${esc(p.title)}" loading="lazy">` : ''}</div>
-    <div class="card-body">
-      <h3>${esc(p.title)}</h3>
-      <div class="cat">${esc(p.cats)}</div>
-      <p>${esc(p.desc)}</p>
-      <div class="tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
-      ${p.link ? `<a class="more" href="${esc(p.link)}" target="_blank" rel="noopener"><span>Learn more</span></a>` : ''}
-    </div>
-  </article>`).join('');
-document.querySelectorAll('.thumb').forEach(t => {
-  const img = t.querySelector('img');
-  const empty = () => { t.classList.add('empty'); img && img.remove(); };
+function fallback(box){
+  const img = box.querySelector('img');
+  const empty = () => { box.classList.add('empty'); img && img.remove(); };
   if (!img) return empty();
   if (img.complete && img.naturalWidth === 0) empty(); else img.addEventListener('error', empty);
-});
+}
 
-document.getElementById('copy').addEventListener('click', e => {
-  const addr = document.getElementById('email').textContent.trim();
-  navigator.clipboard?.writeText(addr).then(() => { e.target.textContent = 'Copied'; setTimeout(() => e.target.textContent = 'Copy email', 1500); });
+// cards
+const rail = $('rail');
+rail.innerHTML = PROJECTS.map((p, i) => `
+  <button class="card" data-i="${i}" data-g="${esc(p.group)}" aria-label="${esc(p.title)}, open details">
+    <div class="thumb" data-hint="${esc(p.img)}">${p.img ? `<img src="${esc(p.img)}" alt="" loading="lazy">` : ''}</div>
+    <div class="card-top">
+      <span class="eyebrow">${esc(p.cats)}</span>
+      <h3>${esc(p.title)}</h3>
+      <p>${esc(p.desc)}</p>
+    </div>
+    <span class="plus" aria-hidden="true">+</span>
+  </button>`).join('');
+rail.querySelectorAll('.thumb').forEach(fallback);
+
+// filters
+document.querySelectorAll('.chip').forEach(c => c.addEventListener('click', () => {
+  document.querySelectorAll('.chip').forEach(x => x.setAttribute('aria-pressed', x === c));
+  rail.querySelectorAll('.card').forEach(card => card.hidden = !(c.dataset.f === 'all' || card.dataset.g === c.dataset.f));
+  rail.scrollTo({ left: 0, behavior: 'smooth' }); setTimeout(arrows, 400);
+}));
+
+// arrows
+const step = () => (rail.querySelector('.card:not([hidden])')?.offsetWidth || 360) + 20;
+$('prev').onclick = () => rail.scrollBy({ left: -step(), behavior: 'smooth' });
+$('next').onclick = () => rail.scrollBy({ left: step(), behavior: 'smooth' });
+function arrows(){
+  $('prev').disabled = rail.scrollLeft < 8;
+  $('next').disabled = rail.scrollLeft + rail.clientWidth > rail.scrollWidth - 8;
+}
+rail.addEventListener('scroll', arrows, { passive: true }); window.addEventListener('resize', arrows); arrows();
+
+// detail sheet
+const sheet = $('sheet');
+rail.addEventListener('click', e => {
+  const card = e.target.closest('.card'); if (!card) return;
+  const p = PROJECTS[card.dataset.i];
+  $('sheet-cat').textContent = p.cats;
+  $('sheet-title').textContent = p.title;
+  $('sheet-text').textContent = p.more || p.desc;
+  $('sheet-tags').innerHTML = p.tags.map(t => `<span>${esc(t)}</span>`).join('');
+  $('sheet-link').innerHTML = p.link ? `<a class="btn primary" href="${esc(p.link)}" target="_blank" rel="noopener">Learn more</a>` : '';
+  $('sheet-img').innerHTML = p.img ? `<img src="${esc(p.img)}" alt="${esc(p.title)}">` : '';
+  $('sheet-img').className = 'sheet-img'; fallback($('sheet-img'));
+  sheet.showModal();
+});
+$('close').onclick = () => sheet.close();
+sheet.addEventListener('click', e => { if (e.target === sheet) sheet.close(); });
+
+// mobile menu
+const nav = $('nav');
+$('menu').onclick = () => { const o = nav.classList.toggle('open'); $('menu').setAttribute('aria-expanded', o); };
+$('links').addEventListener('click', e => { if (e.target.tagName === 'A'){ nav.classList.remove('open'); $('menu').setAttribute('aria-expanded', false); } });
+
+// highlight the section you're in
+const navLinks = [...document.querySelectorAll('.links a')];
+const secObs = new IntersectionObserver(es => es.forEach(en => {
+  if (en.isIntersecting) navLinks.forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#' + en.target.id));
+}), { rootMargin: '-45% 0px -50% 0px' });
+['top', 'projects', 'about', 'skills', 'contact'].forEach(id => secObs.observe($(id)));
+
+// fade sections in as you scroll
+const rev = new IntersectionObserver(es => es.forEach(en => { if (en.isIntersecting){ en.target.classList.add('in'); rev.unobserve(en.target); } }), { threshold: 0.12 });
+document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (el.classList.contains('skill') || el.classList.contains('tile') ? (i % 4) * 80 : 0) + 'ms'; rev.observe(el); });
+
+// copy email
+$('copy').addEventListener('click', () => {
+  const addr = $('email').textContent.trim();
+  navigator.clipboard?.writeText(addr).then(() => { $('toast').textContent = 'Copied to clipboard'; setTimeout(() => $('toast').textContent = '', 1800); });
 });
 </script>
 <script src="sims.js"></script>
