@@ -8,7 +8,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Unbounded:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;500;600&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -37,7 +37,7 @@
   </div>
   <div class="hero-text">
     <span class="eyebrow">Mechanical Engineering · Purdue University Indianapolis</span>
-    <h1>Building things that go <span class="grad" style="white-space:nowrap">fast or go up.</span></h1>
+    <h1>Building things that go<br>fast or go up.</h1>
     <p>I'm Atiksh. I work on race car aerodynamics and rockets, and I like taking a design from CAD to something that actually works.</p>
     <div class="btns">
       <a class="btn primary" href="#projects">View projects</a>
@@ -94,7 +94,7 @@
       <h2>Contact</h2>
       <p class="note">Best way to reach me is email.</p>
       <!-- Replace with your real email in BOTH places on the next line -->
-      <a class="email grad" id="email" href="mailto:you@example.com">you@example.com</a>
+      <a class="email" id="email" href="mailto:you@example.com">you@example.com</a>
       <div class="btns">
         <button type="button" class="btn primary" id="copy">Copy email</button>
         <!-- Replace with your real LinkedIn URL -->
@@ -150,7 +150,7 @@ document.getElementById('cards').innerHTML = PROJECTS.map(p => `
       <div class="cat">${esc(p.cats)}</div>
       <p>${esc(p.desc)}</p>
       <div class="tags">${p.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div>
-      ${p.link ? `<a class="more" href="${esc(p.link)}" target="_blank" rel="noopener"><span>Open project →</span></a>` : ''}
+      ${p.link ? `<a class="more" href="${esc(p.link)}" target="_blank" rel="noopener"><span>Learn more</span></a>` : ''}
     </div>
   </article>`).join('');
 document.querySelectorAll('.thumb').forEach(t => {
